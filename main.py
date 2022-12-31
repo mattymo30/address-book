@@ -74,6 +74,23 @@ def confirm_exit():
         main_screen.destroy()
 
 
+def add_entry():
+    name_to_add = name.get()
+    number_to_add = number.get()
+    address_to_add = address.get()
+    notes_to_add = notes.get()
+    if name_to_add != "" and number_to_add != "" and address_to_add != "":
+        line_str = (name_to_add + "\t" + number_to_add + "\t" + address_to_add
+                    + "\t" + notes_to_add + "\n")
+        file = open("addresses.txt", "w")
+        file.write(line_str)
+        file.close()
+        name.delete(0, END)
+        number.delete(0, END)
+        address.delete(0, END)
+        notes.delete(0, END)
+
+
 main_menu = Frame(main_screen)
 add_frame = Frame(main_screen)
 update_frame = Frame(main_screen)
@@ -117,7 +134,8 @@ Label(add_frame, text="Notes:").pack()
 notes = Entry(add_frame)
 notes.pack()
 Label(add_frame, text="").pack()
-Button(add_frame, text="Submit", height="2", width="30").pack()
+Button(add_frame, text="Submit", height="2", width="30",
+       command=add_entry).pack()
 Button(add_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
@@ -125,8 +143,8 @@ Button(add_frame, text="Main Menu", height="2", width="30",
 Label(update_frame, text="Update Entry", font=25).pack()
 Label(update_frame, text="").pack()
 Label(update_frame, text="Name To Be Updated:").pack()
-name = Entry(update_frame)
-name.pack()
+name_to_update = Entry(update_frame)
+name_to_update.pack()
 Label(update_frame, text="").pack()
 Label(update_frame, text="Updated Name:").pack()
 new_name = Entry(update_frame)
