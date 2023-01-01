@@ -2,7 +2,6 @@ from tkinter import *
 from dataclasses import dataclass
 from tkinter import messagebox as mb
 
-
 main_screen = Tk()
 main_screen.title("Address Book")
 width = 400
@@ -110,11 +109,29 @@ def update_entry():
     change_phone = new_number.get()
     change_address = new_address.get()
     change_notes = new_note.get()
-    file = open("addresses.txt")
-    for line in file:
+    file = open("addresses.txt", "r+")
+    data = file.readlines()
+    for line in data:
         line_list = line.split("\t")
         if line_list[0] == update_name:
-            pass
+            if change_name != "":
+                line_list[0] = change_name
+            if change_phone != "":
+                line_list[1] = change_phone
+            if change_address != "":
+                line_list[2] = change_address
+            if change_notes != "":
+                line_list[3] = change_notes
+            line = (line_list[0] + "\t" + line_list[1] + "\t" +
+                    line_list[2] + "\t" + line_list[3] + "\n")
+            file.write(line)
+            name_to_update.delete(0, END)
+            new_name.delete(0, END)
+            new_number.delete(0, END)
+            new_address.delete(0, END)
+            new_note.delete(0, END)
+            mb.showinfo(title="Success", message="Update Successful")
+            file.close()
     mb.showerror(title="Unsuccessful", message="Name Does Not Exist "
                                                "In Database")
     file.close()
@@ -125,7 +142,6 @@ add_frame = Frame(main_screen)
 update_frame = Frame(main_screen)
 delete_frame = Frame(main_screen)
 display_frame = Frame(main_screen)
-
 
 Label(main_menu, text="Address Book", font=25).pack()
 Label(main_menu, text='').pack()
@@ -143,7 +159,6 @@ Button(main_menu, text="Display Entries", height="2", width="30",
 Label(main_menu, text='').pack()
 Button(main_menu, text="Exit", height="2", width="30",
        command=confirm_exit).pack()
-
 
 Label(add_frame, text="Add New Entry", font=25).pack()
 Label(add_frame, text="").pack()
@@ -168,7 +183,6 @@ Button(add_frame, text="Submit", height="2", width="30",
 Button(add_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
-
 Label(update_frame, text="Update Entry", font=25).pack()
 Label(update_frame, text="").pack()
 Label(update_frame, text="Name To Be Updated:").pack()
@@ -191,10 +205,10 @@ Label(update_frame, text="New Notes: ").pack()
 new_note = Entry(update_frame)
 new_note.pack()
 Label(update_frame, text="").pack()
-Button(update_frame, text="Update", height="2", width="30").pack()
+Button(update_frame, text="Update", height="2", width="30",
+       command=update_entry).pack()
 Button(update_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
-
 
 Label(delete_frame, text="Delete Entry", font=25).pack()
 Label(delete_frame, text="").pack()
@@ -207,12 +221,10 @@ Button(delete_frame, text="Delete", height="2", width="30").pack()
 Button(delete_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
-
 Label(display_frame, text="Address Book", font=25).pack()
 Button(display_frame, text="Show", height="2", width="30").pack()
 Button(display_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
-
 
 main_menu.pack(fill='both', expand=1)
 main_screen.mainloop()
