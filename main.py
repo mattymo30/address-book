@@ -80,15 +80,44 @@ def add_entry():
     address_to_add = address.get()
     notes_to_add = notes.get()
     if name_to_add != "" and number_to_add != "" and address_to_add != "":
+        if notes_to_add == "":
+            notes_to_add = "N/A"
         line_str = (name_to_add + "\t" + number_to_add + "\t" + address_to_add
-                    + "\t" + notes_to_add + "\n")
-        file = open("addresses.txt", "w")
+                    + "\t" + notes_to_add)
+        file = open("addresses.txt", "a")
         file.write(line_str)
+        file.write("\n")
         file.close()
         name.delete(0, END)
         number.delete(0, END)
         address.delete(0, END)
         notes.delete(0, END)
+        mb.showinfo(title="Success", message="Entry Successful")
+    else:
+        error_message = ""
+        if name_to_add == "":
+            error_message += "Name Cannot Be Blank\n"
+        if number_to_add == "":
+            error_message += "Phone Number Cannot Be Blank\n"
+        if address_to_add == "":
+            error_message += "Address Cannot Be Blank\n"
+        mb.showerror(title="Unsuccessful", message=error_message)
+
+
+def update_entry():
+    update_name = name_to_update.get()
+    change_name = new_name.get()
+    change_phone = new_number.get()
+    change_address = new_address.get()
+    change_notes = new_note.get()
+    file = open("addresses.txt")
+    for line in file:
+        line_list = line.split("\t")
+        if line_list[0] == update_name:
+            pass
+    mb.showerror(title="Unsuccessful", message="Name Does Not Exist "
+                                               "In Database")
+    file.close()
 
 
 main_menu = Frame(main_screen)
