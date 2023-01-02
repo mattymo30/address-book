@@ -109,8 +109,10 @@ def update_entry():
     change_phone = new_number.get()
     change_address = new_address.get()
     change_notes = new_note.get()
-    file = open("addresses.txt", "r+")
+    file = open("addresses.txt", "r")
     data = file.readlines()
+    file.close()
+    counter = 0
     for line in data:
         line_list = line.split("\t")
         if line_list[0] == update_name:
@@ -122,9 +124,10 @@ def update_entry():
                 line_list[2] = change_address
             if change_notes != "":
                 line_list[3] = change_notes
-            line = (line_list[0] + "\t" + line_list[1] + "\t" +
-                    line_list[2] + "\t" + line_list[3] + "\n")
-            file.write(line)
+            data[counter] = (line_list[0] + "\t" + line_list[1] + "\t" +
+                             line_list[2] + "\t" + line_list[3] + "\n")
+            file = open("addresses.txt", "w")
+            file.writelines(data)
             name_to_update.delete(0, END)
             new_name.delete(0, END)
             new_number.delete(0, END)
@@ -132,6 +135,8 @@ def update_entry():
             new_note.delete(0, END)
             mb.showinfo(title="Success", message="Update Successful")
             file.close()
+            return
+        counter += 1
     mb.showerror(title="Unsuccessful", message="Name Does Not Exist "
                                                "In Database")
     file.close()
