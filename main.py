@@ -142,6 +142,34 @@ def update_entry():
     file.close()
 
 
+def delete_entry():
+    name_to_delete = delete_name.get()
+    file = open("addresses.txt", "r")
+    data = file.readlines()
+    file.close()
+    counter = 0
+    for line in data:
+        line_list = line.split("\t")
+        if line_list[0] == name_to_delete:
+            answer = mb.askyesno(title="Confirm Deletion",
+                                 message="Are you sure you want to delete"
+                                         " this entry?")
+            if answer:
+                data[counter] = ""
+                file = open("addresses.txt", "w")
+                file.writelines(data)
+                delete_name.delete(0, END)
+                mb.showinfo(title="Success", message="Deletion Successful")
+                file.close()
+                return
+            else:
+                return
+        counter += 1
+    mb.showerror(title="Unsuccessful", message="Name Does Not Exist "
+                                               "In Database")
+    file.close()
+
+
 main_menu = Frame(main_screen)
 add_frame = Frame(main_screen)
 update_frame = Frame(main_screen)
@@ -222,7 +250,8 @@ Label(delete_frame, text="").pack()
 delete_name = Entry(delete_frame)
 delete_name.pack()
 Label(delete_frame, text="").pack()
-Button(delete_frame, text="Delete", height="2", width="30").pack()
+Button(delete_frame, text="Delete", height="2", width="30",
+       command=delete_entry).pack()
 Button(delete_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
