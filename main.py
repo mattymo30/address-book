@@ -1,6 +1,6 @@
 from tkinter import *
-from dataclasses import dataclass
 from tkinter import messagebox as mb
+
 
 main_screen = Tk()
 main_screen.title("Address Book")
@@ -11,14 +11,6 @@ screen_height = main_screen.winfo_screenheight()  # Height of the screen
 x = (screen_width / 2) - (width / 2)
 y = (screen_height / 2) - (height / 2)
 main_screen.geometry("%dx%d+%d+%d" % (width, height, x, y))
-
-
-@dataclass
-class Address:
-    name: str
-    phone: str
-    address: str
-    notes: str
 
 
 def change_to_menu():
@@ -163,11 +155,38 @@ def delete_entry():
                 file.close()
                 return
             else:
+                file.close()
                 return
         counter += 1
     mb.showerror(title="Unsuccessful", message="Name Does Not Exist "
                                                "In Database")
     file.close()
+
+
+def display(counter=0):
+    results = []
+    with open("addresses.txt", "r") as fp:
+        for i in fp.readlines():
+            line = i.split('\t')
+            line[3].strip('\n')
+            results.append((line[0], line[1], line[2], line[3]))
+
+    if len(results) == 0:
+        mb.showerror(title="Empty Data", message="No Entries In The Address"
+                                                 " Book")
+    else:
+        name_display.config(text=results[counter][0])
+        number_display.config(text=results[counter][1])
+        address_display.config(text=results[counter][2])
+        notes_display.config(text=results[counter][3])
+
+
+def next_element():
+    pass
+
+
+def back():
+    pass
 
 
 main_menu = Frame(main_screen)
@@ -255,8 +274,26 @@ Button(delete_frame, text="Delete", height="2", width="30",
 Button(delete_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
+counter = 0
 Label(display_frame, text="Address Book", font=25).pack()
-Button(display_frame, text="Show", height="2", width="30").pack()
+Label(display_frame, text="Name:").pack()
+name_display = Label(display_frame, text="")
+name_display.pack()
+Label(display_frame, text="").pack()
+Label(display_frame, text="Phone Number:").pack()
+number_display = Label(display_frame, text="")
+number_display.pack()
+Label(display_frame, text="").pack()
+Label(display_frame, text="Address:").pack()
+address_display = Label(display_frame, text="")
+address_display.pack()
+Label(display_frame, text="").pack()
+Label(display_frame, text="Notes:").pack()
+notes_display = Label(display_frame, text="")
+notes_display.pack()
+Label(display_frame, text="").pack()
+Button(display_frame, text="Show", height="2", width="30",
+       command=lambda: display(counter)).pack()
 Button(display_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
