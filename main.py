@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox as mb
 
-
 main_screen = Tk()
 main_screen.title("Address Book")
 width = 400
@@ -163,14 +162,18 @@ def delete_entry():
     file.close()
 
 
-def display(counter=0):
+def get_data():
     results = []
     with open("addresses.txt", "r") as fp:
         for i in fp.readlines():
             line = i.split('\t')
             line[3].strip('\n')
             results.append((line[0], line[1], line[2], line[3]))
+    return results
 
+
+def display(counter=0):
+    results = get_data()
     if len(results) == 0:
         mb.showerror(title="Empty Data", message="No Entries In The Address"
                                                  " Book")
@@ -179,14 +182,34 @@ def display(counter=0):
         number_display.config(text=results[counter][1])
         address_display.config(text=results[counter][2])
         notes_display.config(text=results[counter][3])
+        if counter == 0:
+            show.forget()
+            next_button.pack()
+            back_button.pack()
 
 
 def next_element():
-    pass
+    page_counter.set(page_counter.get() + 1)
+    counter = page_counter.get()
+    if len(get_data()) <= counter:
+        mb.showerror(title="End of Data", message="You have reached the"
+                                                  " end of the "
+                                                  "address book.")
+        page_counter.set(page_counter.get() - 1)
+        return
+    display(counter)
 
 
 def back():
-    pass
+    page_counter.set(page_counter.get() - 1)
+    counter = page_counter.get()
+    if counter < 0:
+        mb.showerror(title="Beginning of Data", message="You have reached the"
+                                                        " beginning of the "
+                                                        "address book.")
+        page_counter.set(page_counter.get() + 1)
+        return
+    display(counter)
 
 
 main_menu = Frame(main_screen)
@@ -274,8 +297,9 @@ Button(delete_frame, text="Delete", height="2", width="30",
 Button(delete_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
-counter = 0
+page_counter = IntVar(value=0)
 Label(display_frame, text="Address Book", font=25).pack()
+page_number = Label()
 Label(display_frame, text="Name:").pack()
 name_display = Label(display_frame, text="")
 name_display.pack()
@@ -292,8 +316,13 @@ Label(display_frame, text="Notes:").pack()
 notes_display = Label(display_frame, text="")
 notes_display.pack()
 Label(display_frame, text="").pack()
-Button(display_frame, text="Show", height="2", width="30",
-       command=lambda: display(counter)).pack()
+show = Button(display_frame, text="Show", height="2", width="30",
+              command=lambda: display())
+show.pack()
+next_button = Button(display_frame, text="Next", height="2", width="30",
+                     command=lambda: next_element())
+back_button = Button(display_frame, text="Back", height="2", width="30",
+                     command=lambda: back())
 Button(display_frame, text="Main Menu", height="2", width="30",
        command=change_to_menu).pack()
 
