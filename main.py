@@ -1,18 +1,24 @@
 from tkinter import *
 from tkinter import messagebox as mb
 
+
+# set up screen
 main_screen = Tk()
 main_screen.title("Address Book")
 width = 400
 height = 500
 screen_width = main_screen.winfo_screenwidth()  # Width of the screen
 screen_height = main_screen.winfo_screenheight()  # Height of the screen
+# set screen to center of user's screen
 x = (screen_width / 2) - (width / 2)
 y = (screen_height / 2) - (height / 2)
 main_screen.geometry("%dx%d+%d+%d" % (width, height, x, y))
 
 
 def change_to_menu():
+    """
+    changes frame to the main_menu frame
+    """
     main_screen.title("Address Book")
     add_frame.forget()
     update_frame.forget()
@@ -22,6 +28,9 @@ def change_to_menu():
 
 
 def change_to_add():
+    """
+    changes frame to the add_frame frame
+    """
     main_screen.title("Add New Contact")
     main_menu.forget()
     update_frame.forget()
@@ -31,6 +40,9 @@ def change_to_add():
 
 
 def change_to_update():
+    """
+    changes frame to the update_frame frame
+    """
     main_screen.title("Update Contact")
     main_menu.forget()
     add_frame.forget()
@@ -40,6 +52,9 @@ def change_to_update():
 
 
 def change_to_delete():
+    """
+    changes frame to the delete_frame frame
+    """
     main_screen.title("Delete Contact")
     main_menu.forget()
     add_frame.forget()
@@ -49,11 +64,26 @@ def change_to_delete():
 
 
 def change_to_display():
+    """
+    changes the frame to the display_frame frame
+    """
     main_screen.title("All Contacts")
     main_menu.forget()
     add_frame.forget()
     update_frame.forget()
     delete_frame.forget()
+    # update the buttons on the frame to the original format
+    main_button.forget()
+    next_button.forget()
+    back_button.forget()
+    show.pack()
+    main_button.pack()
+    # set page counter back to 0 and all display labels as ""
+    page_counter.set(0)
+    name_display.config(text="")
+    number_display.config(text="")
+    address_display.config(text="")
+    notes_display.config(text="")
     display_frame.pack(fill='both', expand=1)
 
 
@@ -184,8 +214,10 @@ def display(counter=0):
         notes_display.config(text=results[counter][3])
         if counter == 0:
             show.forget()
+            main_button.forget()
             next_button.pack()
             back_button.pack()
+            main_button.pack()
 
 
 def next_element():
@@ -323,8 +355,9 @@ next_button = Button(display_frame, text="Next", height="2", width="30",
                      command=lambda: next_element())
 back_button = Button(display_frame, text="Back", height="2", width="30",
                      command=lambda: back())
-Button(display_frame, text="Main Menu", height="2", width="30",
-       command=change_to_menu).pack()
+main_button = Button(display_frame, text="Main Menu", height="2", width="30",
+       command=change_to_menu)
+main_button.pack()
 
 main_menu.pack(fill='both', expand=1)
 main_screen.mainloop()
